@@ -45,6 +45,37 @@
       <p>&copy; 2023 Mergington High School</p>
     </footer>
 
-    <script src="app.js"></script>
+    <script>
+      function renderActivities(activities) {
+        const activitiesList = document.getElementById("activities-list");
+        activitiesList.innerHTML = "";
+
+        for (const [name, details] of Object.entries(activities)) {
+          const card = document.createElement("div");
+          card.className = "activity-card";
+
+          card.innerHTML = `
+            <h4>${name}</h4>
+            <p>${details.description}</p>
+            <p><strong>Schedule:</strong> ${details.schedule}</p>
+            <p><strong>Max Participants:</strong> ${details.max_participants}</p>
+            <p><strong>Participants:</strong></p>
+            <ul>
+              ${details.participants.length > 0 
+                ? details.participants.map(participant => `<li>${participant}</li>`).join("")
+                : "<li>No participants yet</li>"}
+            </ul>
+          `;
+
+          activitiesList.appendChild(card);
+        }
+      }
+
+      // Fetch and render activities
+      fetch("/activities")
+        .then(response => response.json())
+        .then(data => renderActivities(data))
+        .catch(error => console.error("Error loading activities:", error));
+    </script>
   </body>
 </html>
